@@ -1,0 +1,94 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Abrir conta";
+}
+
+<div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+            <div class="card text-black" style="border-radius: 25px;">
+                <div class="card-body p-md-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                            <figure class="text-center">
+                                <blockquote class="blockquote">
+                                    <p>
+                                        <h1>Abra sua Conta Conosco!</h1>
+                                    <p>Temos a conta certa para o seu momento de vida!</p>
+                                    </p>
+                                </blockquote>
+                            </figure>
+                            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.Nome"></label>
+                                        <input asp-for="Input.Nome" class="form-control" />
+                                        <span asp-validation-for="Input.Nome" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.Cpf"></label>
+                                        <input asp-for="Input.Cpf" class="form-control" />
+                                        <span asp-validation-for="Input.Cpf" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.DataNascimento"></label>
+                                        <input asp-for="Input.DataNascimento" class="form-control" />
+                                        <span asp-validation-for="Input.DataNascimento" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.TipoConta"></label>
+                                        <select asp-for="Input.TipoConta" class="form-select" asp-items="@Html.GetEnumSelectList<TipoConta>()"></select>
+                                        <span asp-validation-for="Input.TipoConta" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.Email"></label>
+                                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.Password"></label>
+                                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center mb-4">
+                                    <div class="form-outline flex-fill mb-0">
+                                        <label asp-for="Input.ConfirmPassword"></label>
+                                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-evenly mx-4 mb-3 mb-lg-4">
+                                    <button id="registerSubmit" type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+                                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-lg btn-warning">Já tem conta?</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                            <img src="~/img/mulhercartao.png" class="img-fluid" alt="Mulher com cartão">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

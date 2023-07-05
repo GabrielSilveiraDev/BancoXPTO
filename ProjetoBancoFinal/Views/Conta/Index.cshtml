@@ -1,0 +1,213 @@
+﻿@model ClienteChavePixViewModel
+
+@{
+    ViewData["Title"] = "Conta";
+}
+@section Scripts{
+    <script src="~/js/conta.js"></script>
+}
+
+<div class="mb-3"></div>
+<h1>Bem-vindo, @Model.Cliente.Nome.Split(" ")[0] <span class="badge rounded-pill bg-primary">@Model.Cliente.Tipo</span></h1>
+
+<hr />
+
+<mensagem texto="@TempData["msg"]"></mensagem>
+<mensagem class = "alert alert-danger"texto="@TempData["erroTransferir"]"></mensagem>
+
+<div class="row mb-5">
+    <div class="col">
+        <div class="card border-secondary" style="max-width: 18rem; height: 8.1rem;">
+            <div class="card-header">Seu saldo é:</div>
+            <div class="card-body align-self-center">
+                <p class="card-text">@Model.Cliente.Conta.Saldo.ToString("C")</p>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="col">
+
+        <div class="card border-secondary" style="max-width: 18rem; height: 8.1rem;">
+            <div class="card-header">Transferência:</div>
+            <button type="button" class="btn btn-outline-light" style="color:black" data-bs-toggle="modal" data-bs-target="#transferirModal">
+                <div class="card-body">
+                    <p>Fazer transferência</p>
+                </div>
+            </button>
+        </div>
+        <mensagem texto="@TempData["saldoNeg"]" class="alert alert-danger text-center sm" style="max-width: 18rem;" ></mensagem>
+    </div>
+    <div class="col">
+
+        <div class="card border-secondary" style="max-width: 18rem; height : 8.1rem;">
+            <div class="card-header">Depósito:</div>
+            <button type="button" class="btn btn-outline-light" style="color:black" data-bs-toggle="modal" data-bs-target="#depositarModal">
+                <div class="card-body">
+                    <p>Depositar valor</p>
+                </div>
+            </button>
+        </div>
+        <mensagem texto="@TempData["valorNeg"]" class="alert alert-danger text-center sm" style="max-width: 18rem;" ></mensagem>
+    </div>
+</div>
+
+<h3>Área PIX</h3>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <mensagem texto="@TempData["rmvCv"]"></mensagem>
+        <mensagem texto="@TempData["cvInvalida"]" class="alert alert-danger text-center sm" ></mensagem>
+        @if(Model.Cliente.Conta.ChavesPix != null)
+        {
+        <table class="table text-center">
+            <tr>
+                <th>Tipo de chave</th>
+                <th>Chave PIX</th>
+                <th>Excluir chave</th>
+            </tr>
+            
+            @foreach (ChavePix chavepix in Model.Cliente.Conta.ChavesPix)
+            {
+                    <tr>
+                        @if (chavepix.Tipo == TipoChavePix.Aleatorio)
+                        {
+                            <td>Aleatório</td>
+                        }
+                        else if(chavepix.Tipo == TipoChavePix.Cpf)
+                        {
+                            <td>CPF</td>
+                        }
+                        else if(chavepix.Tipo == TipoChavePix.Email)
+                        {
+                            <td>E-mail</td>
+                        }
+                        else
+                        {
+                           <td>@chavepix.Tipo</td> 
+                        }
+                        <td>@chavepix.Chave</td>
+                    <td>
+                        <button type="button" onclick="idChavePix.value = @chavepix.ChavePixId" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removerModal">
+                            Remover
+                        </button>
+                    </td>
+                </tr>
+            } 
+            </table>
+        }
+        else
+        {
+            <h5>Nenhuma chave PIX cadastrada</h5>
+        }
+    </div>
+    <div class="col">
+        <h5 class="fw-bold">Conheça as vantagens do PIX</h5>
+        <hr />
+        <p class="text-justify">O Pix é a solução perfeita para quem busca facilidade no dia a dia para pagamentos e recebimentos, e com toda a segurança. Com pagamentos instantâneos, qualquer movimentação de dinheiro se torna rápida, prática e fácil.</p>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastrarModal">
+            Cadastrar nova chave PIX
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="cadastrarModal" tabindex="-1" aria-labelledby="#cadastrarModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CadastrarChavePix">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chaves Pix</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="TipoChave" class="form-label">Tipo de chave</label>
+                        <select id="tipoChavePix" asp-for="TipoChave" class="form-select" asp-items="@Html.GetEnumSelectList<TipoChavePix>().OrderBy(o => o.Text)"></select>
+                    </div>
+                    <div class="mb-3" id="divChavePix" style="display : none">
+                        <label asp-for="Chave" class="form-label">Digite a chave PIX</label>
+                        <input asp-for="Chave" class="form-control"  />
+                        <span asp-validation-for="Chave" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Cadastrar chave" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="transferirModal" tabindex="-1" aria-labelledby="#transferirModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Transferir">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transferirModalLabel">Fazer transferência</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="Valor" class="form-label">Digite o valor</label>
+                        <input class="form-control" asp-for="Valor" />
+                        <span asp-validation-for="Valor" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="TipoChave" class="form-label">Tipo de chave</label>
+                            <select asp-for="TipoChave" class="form-select" asp-items="@Html.GetEnumSelectList<TipoChavePix>().OrderBy(o => o.Text)"></select>
+                         </div>
+                        <label asp-for="Chave" class="form-label">Digite a chave pix</label>
+                        <input class="form-control" asp-for="Chave" />
+                        <span asp-validation-for="Chave" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Transferir" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="depositarModal" tabindex="-1" aria-labelledby="#depositarModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Depositar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="depositarModalLabel">Realizar depósito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="Valor" class="form-label">Digite o valor</label>
+                        <input class="form-control" asp-for="Valor" />
+                        <span asp-validation-for="Valor" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Depositar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removerModal" tabindex="-1" aria-labelledby="removerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removerModalLabel">Confirmação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Deseja remover a chave PIX?
+            </div>
+            <div class="modal-footer">                
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="RemoverChavePix">
+                    <input type="hidden" id="idChavePix" name="id" />
+                    <input type="submit" class="btn btn-primary" value="Remover" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

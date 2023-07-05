@@ -1,0 +1,198 @@
+﻿@model ClienteChavePixViewModel
+
+@{
+    ViewData["Title"] = "Conta";
+}
+<div class="mb-3"></div>
+<h1>Bem-vindo, @Model.Cliente.Nome.Split(" ")[0] <span class="badge rounded-pill bg-primary">@Model.Cliente.Tipo</span></h1>
+
+<hr />
+
+<mensagem texto="@TempData["msg"]"></mensagem>
+
+<div class="row mb-5">
+    <div class="col">
+        <div class="card border-secondary mb-3" style="max-width: 18rem; height: 8.1rem;">
+            <div class="card-header">Seu saldo é:</div>
+            <div class="card-body align-self-center">
+                <p class="card-text">@(Model.Cliente.Conta.Saldo == null?"0.00":Model.Cliente.Conta.Saldo.ToString("C"))</p>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="col">
+
+        <div class="card border-secondary mb-3" style="max-width: 18rem; height: 8.1rem;">
+            <div class="card-header">Transferência:</div>
+            <button type="button" class="btn btn-outline-light" style="color:black" data-bs-toggle="modal" data-bs-target="#transferirModal">
+                <div class="card-body">
+                    <p>Realizar transferência</p>
+                </div>
+            </button>
+        </div>
+    </div>
+    <div class="col">
+
+        <div class="card border-secondary mb-3" style="max-width: 18rem; height : 8.1rem;">
+            <div class="card-header">Depósito:</div>
+            <button type="button" class="btn btn-outline-light" style="color:black" data-bs-toggle="modal" data-bs-target="#depositarModal">
+                <div class="card-body">
+                    <p>Depositar valor</p>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<h3>Área PIX</h3>
+<hr />
+
+<div class="row">
+    <div class="col">
+        <mensagem texto="@TempData["rmvCv"]"></mensagem>
+        @if(Model.Cliente.Conta.ChavesPix != null)
+        {
+        <table class="table text-center">
+            <tr>
+                <th>Tipo de chave</th>
+                <th>Chave PIX</th>
+                <th>Excluir chave</th>
+            </tr>
+<<<<<<< HEAD
+            
+            @foreach (ChavePix chavepix in Model.Lista)
+            {
+                <tr>
+                    <td>@chavepix.Tipo</td>
+                    <td>@chavepix.Chave</td>
+                    <td>
+                        <button type="button" onclick="idChavePix.value = @chavepix.ChavePixId" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removerModal">
+                            Remover
+                        </button>
+                    </td>
+                </tr>
+            } 
+            </table>
+        }
+        else
+        {
+            <h5>Nenhuma chave PIX cadastrada</h5>
+        }
+=======
+            <!--foreach chaves pix-->
+            <tr>
+                <td>CPF</td>
+                <td>0000000000</td>
+                <td><button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#removerModal">
+                      Remover
+                    </button></td>
+            </tr>
+        </table>
+>>>>>>> 9ac1077d1346ed4e218f8847d41bd565e3f2a307
+    </div>
+    <div class="col">
+        <h5 class="fw-bold">Conheça as vantagens do PIX</h5>
+        <hr />
+        <p class="text-justify">O Pix é a solução perfeita para quem busca facilidade no dia a dia para pagamentos e recebimentos, e com toda a segurança. Com pagamentos instantâneos, qualquer movimentação de dinheiro se torna rápida, prática e fácil.</p>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastrarModal">
+            Cadastrar nova chave PIX
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="cadastrarModal" tabindex="-1" aria-labelledby="#cadastrarModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CadastrarChavePix">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chaves Pix</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de chave</label>
+<<<<<<< HEAD
+                        <select name="tipo" class="form-select" asp-items="@Html.GetEnumSelectList<TipoChavePix>()"></select>
+=======
+                        <select class="form-select" asp-items="@Html.GetEnumSelectList<TipoChavePix>().OrderBy(o => o.Text)"></select>
+>>>>>>> 9ac1077d1346ed4e218f8847d41bd565e3f2a307
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Digite a chave PIX</label>
+                        <input name="valor" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Cadastrar chave" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="transferirModal" tabindex="-1" aria-labelledby="#transferirModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Transferir">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transferirModalLabel">Realizar transferência</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Digite o valor</label>
+                        <input class="form-control" name="valor" />
+                        <label class="form-label">Digite a chave pix</label>
+                        <input class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Transferir" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="depositarModal" tabindex="-1" aria-labelledby="#depositarModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Depositar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="depositarModalLabel">Realizar depósito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Digite o valor</label>
+                        <input class="form-control" name="valor" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Depositar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removerModal" tabindex="-1" aria-labelledby="removerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removerModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Deseja remover a chave PIX?
+            </div>
+            <div class="modal-footer">                
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="RemoverChavePix">
+                    <input type="hidden" id="idChavePix" name="id" />
+                    <input type="submit" class="btn btn-primary" value="Remover" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

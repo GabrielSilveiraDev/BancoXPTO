@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "XPTO";
+}
+<style>
+    body {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)), url(../img/landingbg.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    h1 {
+        font-size: 100px;
+        color: white;
+    }
+
+    h2 {
+        color: white;
+    }
+</style>
+
+<body>
+    <div class="text-center mb-5">
+        <h1 class="display-4">Seja bem-vindo!</h1>
+    </div>
+
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="row text-center fw-bold mb-3">
+            <div>
+                <h2>Estabilidade e segurança financeira para você e sua família no XPTO Bank.</h2>
+            </div>
+
+            <div class="text-center mb-3">
+                <a asp-controller="Conta" class="btn btn-lg btn-primary">Acesse a sua conta!</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row text-center fw-bold mb-3">
+            <div class="col">
+                <h2>Estabilidade e segurança financeira para você e sua família no XPTO Bank.</h2>
+            </div>
+
+            <div class="col">
+                <h2>Para você que já faz parte da família XPTO:</h2>
+            </div>
+        </div>
+        <div class="row text-center fw-bold mb-3">
+            <div class="col">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-lg btn-primary">Faça já seu cadastro!</a>
+            </div>
+            <div class="col">
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-lg btn-primary">Acesse a sua conta!</a>
+            </div>
+        </div>
+    }
+</body>
+
